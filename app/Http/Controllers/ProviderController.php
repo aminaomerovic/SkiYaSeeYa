@@ -50,7 +50,7 @@ class ProviderController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('provider.dashboard')->with('success', 'Equipment created successfully.');
+        return redirect()->route('provider.dashboard')->with('success', 'Oprema uspešno dodata.');
     }
 
     public function editEquipment($id)
@@ -89,19 +89,19 @@ class ProviderController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('provider.dashboard')->with('success', 'Equipment updated successfully.');
+        return redirect()->route('provider.dashboard')->with('success', 'Oprema uspešno izmenjena.');
     }
 
     public function deleteEquipment($id)
     {
         $equipment = Equipment::where('provider_id', Auth::id())->findOrFail($id);
-        
+
         if ($equipment->image) {
             Storage::disk('public')->delete($equipment->image);
         }
 
         $equipment->delete();
-        return redirect()->route('provider.dashboard')->with('success', 'Equipment deleted successfully.');
+        return redirect()->route('provider.dashboard')->with('success', 'Oprema uspešno obrisana.');
     }
 
     public function reservations()
@@ -121,19 +121,32 @@ class ProviderController extends Controller
 
         return view('provider.reviews', compact('reviews'));
     }
-    public function completeReservation($id)
-{
-    $reservation = Reservation::findOrFail($id);
 
-    // Provera da li oprema pripada prijavljenom provideru
-    if ($reservation->equipment->provider_id != Auth::id()) {
-        abort(403);
+    public function completeReservation($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        if ($reservation->equipment->provider_id != Auth::id()) {
+            abort(403);
+        }
+
+        $reservation->status = 'completed';
+        $reservation->save();
+
+        return back()->with('success', 'Rezervacija označena kao završena.');
     }
 
-    $reservation->status = 'completed';
-    $reservation->save();
+    public function rejectReservation($id)
+    {
+        $reservation = Reservation::findOrFail($id);
 
-    return back()->with('success', 'Reservation marked as completed.');
-}
+        if ($reservation->equipment->provider_id != Auth::id()) {
+            abort(403);
+        }
 
+        $reservation->status = 'rejected';
+        $reservation->save();
+
+        return back()->with('success', 'Rezervacija odbijena.');
+    }
 }

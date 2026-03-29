@@ -37,7 +37,7 @@ class LoginController extends Controller
         } elseif ($user->isProvider()) {
             return redirect()->route('provider.dashboard');
         } else {
-            return redirect()->route('customer.dashboard');
+            return redirect()->route('customer.browse');
         }
     }
 

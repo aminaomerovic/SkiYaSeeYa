@@ -7,9 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\CustomerController;
 
-Route::get('/', function () {
-    return redirect()->route('customer.browse');
-});
+Route::get('/', [CustomerController::class, 'welcome'])->name('welcome');
 
 // Kontakt stranica
 Route::get('/contact', function () {
@@ -35,6 +33,8 @@ Route::get('/announcements', [AdminController::class, 'announcements'])->name('a
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('create-announcement');
     Route::post('/announcements', [AdminController::class, 'storeAnnouncement'])->name('store-announcement');
     Route::delete('/announcements/{id}', [AdminController::class, 'deleteAnnouncement'])->name('delete-announcement');
+    Route::get('/contact', [AdminController::class, 'editContact'])->name('edit-contact');
+Route::post('/contact', [AdminController::class, 'updateContact'])->name('update-contact');
 });
 
 
@@ -49,10 +49,13 @@ Route::prefix('provider')->name('provider.')->group(function () {
     Route::get('/reviews', [ProviderController::class, 'reviews'])->name('reviews');
     Route::post('/reservations/{id}/complete', [ProviderController::class, 'completeReservation'])
         ->name('complete-reservation');
+    Route::post('/reservations/{id}/reject', [ProviderController::class, 'rejectReservation'])
+        ->name('reject-reservation');
 });
 
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/browse', [CustomerController::class, 'browseEquipment'])->name('browse');
+    Route::get('/popular', [CustomerController::class, 'popularEquipment'])->name('popular');
     Route::get('/equipment/{id}', [CustomerController::class, 'showEquipment'])->name('equipment-detail');
     
     Route::middleware('auth')->group(function () {

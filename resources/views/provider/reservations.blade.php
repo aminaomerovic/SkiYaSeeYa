@@ -38,14 +38,32 @@
                             </td>
                             <td>
                                 @if($reservation->status == 'confirmed')
-                                    <form action="{{ route('provider.complete-reservation', $reservation->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-success">
-                                            Označi kao završeno
-                                        </button>
-                                    </form>
-                                @else
+                                    <span class="badge bg-success">Potvrđeno</span>
+                                @elseif($reservation->status == 'completed')
+                                    <span class="badge bg-secondary">Završeno</span>
+                                @elseif($reservation->status == 'rejected')
+                                    <span class="badge bg-danger">Odbijeno</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($reservation->status == 'confirmed')
+                                    <div class="d-flex gap-2">
+                                        <form action="{{ route('provider.complete-reservation', $reservation->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-success">Završi</button>
+                                        </form>
+                                        <form action="{{ route('provider.reject-reservation', $reservation->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Da li ste sigurni da želite da odbijete ovu rezervaciju?')">
+                                                Odbij
+                                            </button>
+                                        </form>
+                                    </div>
+                                @elseif($reservation->status == 'completed')
                                     <span class="text-muted small">Završeno</span>
+                                @elseif($reservation->status == 'rejected')
+                                    <span class="text-muted small">Odbijeno</span>
                                 @endif
                             </td>
                         </tr>

@@ -12,6 +12,21 @@ use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
+    public function welcome()
+    {
+        $oneMonthAgo = Carbon::now()->subMonth();
+        $popularEquipment = Equipment::where('available', true)
+            ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
+                $query->where('created_at', '>=', $oneMonthAgo);
+            }])
+            ->having('reservations_count', '>=', 2)
+            ->orderBy('reservations_count', 'desc')
+            ->take(4)
+            ->get();
+
+        return view('welcome', compact('popularEquipment'));
+    }
+
     public function dashboard()
     {
         $reservations = Reservation::where('customer_id', Auth::id())
@@ -22,27 +37,42 @@ class CustomerController extends Controller
     }
 
     public function browseEquipment(Request $request)
-{
-    $query = Equipment::where('available', true);
+    {
+        $query = Equipment::where('available', true);
 
-    if ($request->filled('type')) {
-        $query->whereRaw('LOWER(type) = ?', [strtolower($request->type)]);
+        if ($request->filled('type')) {
+            $query->whereRaw('LOWER(type) = ?', [strtolower($request->type)]);
+        }
+
+        if ($request->filled('gender')) {
+            $query->whereRaw('LOWER(gender) = ?', [strtolower($request->gender)]);
+        }
+
+        $equipment = $query->orderBy('created_at', 'desc')->paginate(12);
+
+        $announcements = Announcement::where('active', true)
+                                     ->orderBy('created_at', 'desc')
+                                     ->take(3)
+                                     ->get();
+
+        return view('customer.browse', compact('equipment', 'announcements'));
     }
 
-    if ($request->filled('gender')) {
-        $query->whereRaw('LOWER(gender) = ?', [strtolower($request->gender)]);
+    public function popularEquipment()
+    {
+        $oneMonthAgo = Carbon::now()->subMonth();
+
+        $equipment = Equipment::where('available', true)
+            ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
+                $query->where('created_at', '>=', $oneMonthAgo);
+            }])
+            ->having('reservations_count', '>=', 2)
+            ->orderBy('reservations_count', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('customer.popular', compact('equipment'));
     }
-
-    $equipment = $query->orderBy('created_at', 'desc')->paginate(12);
-    
-    // Dodaj obaveštenja
-    $announcements = Announcement::where('active', true)
-                                 ->orderBy('created_at', 'desc')
-                                 ->take(3)
-                                 ->get();
-
-    return view('customer.browse', compact('equipment', 'announcements'));
-}
 
     public function showEquipment($id)
     {
@@ -70,7 +100,6 @@ class CustomerController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate   = Carbon::parse($request->end_date);
 
-        // PROVERA PREKLAPANJA REZERVACIJA
         $overlap = Reservation::where('equipment_id', $equipment->id)
             ->where('status', 'confirmed')
             ->where(function ($query) use ($startDate, $endDate) {
@@ -89,18 +118,16 @@ class CustomerController extends Controller
             ]);
         }
 
-        // IZRAČUNAVANJE CENE
         $days = $startDate->diffInDays($endDate) + 1;
         $totalPrice = $equipment->price_per_day * $days;
 
-        // KREIRANJE REZERVACIJE
         Reservation::create([
-            'customer_id' => Auth::id(),
+            'customer_id'  => Auth::id(),
             'equipment_id' => $equipment->id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'total_price' => $totalPrice,
-            'status' => 'confirmed',
+            'start_date'   => $request->start_date,
+            'end_date'     => $request->end_date,
+            'total_price'  => $totalPrice,
+            'status'       => 'confirmed',
         ]);
 
         return redirect()->route('customer.dashboard')
@@ -114,7 +141,6 @@ class CustomerController extends Controller
             ->whereDoesntHave('review')
             ->findOrFail($reservationId);
 
-        // Recenzija tek nakon isteka rezervacije
         if (Carbon::now()->lt(Carbon::parse($reservation->end_date))) {
             abort(403, 'Ne možete još ostaviti recenziju. Rezervacija nije završena.');
         }
@@ -134,17 +160,16 @@ class CustomerController extends Controller
             ->whereDoesntHave('review')
             ->findOrFail($reservationId);
 
-        // recenzija samo kad je rezervacija završena
         if (Carbon::now()->lt(Carbon::parse($reservation->end_date))) {
             abort(403, 'Ne možete još ostaviti recenziju. Rezervacija nije završena.');
         }
 
         Review::create([
-            'customer_id'   => Auth::id(),
-            'equipment_id'  => $reservation->equipment_id,
-            'reservation_id'=> $reservation->id,
-            'rating'        => $request->rating,
-            'comment'       => $request->comment,
+            'customer_id'    => Auth::id(),
+            'equipment_id'   => $reservation->equipment_id,
+            'reservation_id' => $reservation->id,
+            'rating'         => $request->rating,
+            'comment'        => $request->comment,
         ]);
 
         return redirect()->route('customer.dashboard')

@@ -11,28 +11,30 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 @if($reservation->equipment->image)
-                    <img src="{{ asset('storage/' . $reservation->equipment->image) }}" 
-                         class="card-img-top" alt="{{ $reservation->equipment->name }}" 
+                    <img src="{{ asset('storage/' . $reservation->equipment->image) }}"
+                         class="card-img-top" alt="{{ $reservation->equipment->name }}"
                          style="height: 200px; object-fit: cover;">
                 @else
                     <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
                         <span class="text-white fs-1">⛷️</span>
                     </div>
                 @endif
-                
+
                 <div class="card-body">
                     <h5 class="card-title">{{ $reservation->equipment->name }}</h5>
-                    
+
                     <p class="mb-1"><strong>Datum početka:</strong> {{ \Carbon\Carbon::parse($reservation->start_date)->format('d.m.Y') }}</p>
                     <p class="mb-1"><strong>Datum kraja:</strong> {{ \Carbon\Carbon::parse($reservation->end_date)->format('d.m.Y') }}</p>
                     <p class="mb-2"><strong>Ukupna cena:</strong> <span class="text-primary fw-bold">${{ $reservation->total_price }}</span></p>
-                    
+
                     <p class="mb-3">
-                        <strong>Status:</strong> 
+                        <strong>Status:</strong>
                         @if($reservation->status == 'confirmed')
                             <span class="badge bg-success">Potvrđeno</span>
-                        @else
+                        @elseif($reservation->status == 'completed')
                             <span class="badge bg-secondary">Završeno</span>
+                        @elseif($reservation->status == 'rejected')
+                            <span class="badge bg-danger">Odbijeno</span>
                         @endif
                     </p>
 

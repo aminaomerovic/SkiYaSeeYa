@@ -32,6 +32,6 @@ class RegisterController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful. Please wait for admin approval.');
+        return redirect()->route('login')->with('success', 'Registracija uspešna. Sačekajte odobrenje administratora.');
     }
 }

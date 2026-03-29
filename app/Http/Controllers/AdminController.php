@@ -23,7 +23,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $user->update(['status' => 'approved']);
 
-        return redirect()->back()->with('success', 'User approved successfully.');
+        return redirect()->back()->with('success', 'Korisnik uspešno odobren.');
     }
 
     public function deleteUser($id)
@@ -31,7 +31,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->back()->with('success', 'User deleted successfully.');
+        return redirect()->back()->with('success', 'Korisnik uspešno obrisan.');
     }
     public function announcements()
 {
@@ -64,5 +64,21 @@ public function deleteAnnouncement($id)
 {
     Announcement::findOrFail($id)->delete();
     return redirect()->route('admin.announcements')->with('success', 'Obaveštenje obrisano.');
+}
+public function editContact()
+{
+    $content = file_get_contents(resource_path('views/contact.blade.php'));
+    return view('admin.edit-contact', compact('content'));
+}
+
+public function updateContact(Request $request)
+{
+    $request->validate([
+        'content' => 'required|string',
+    ]);
+
+    file_put_contents(resource_path('views/contact.blade.php'), $request->content);
+
+    return redirect()->route('admin.edit-contact')->with('success', 'Kontakt stranica uspješno ažurirana.');
 }
 }

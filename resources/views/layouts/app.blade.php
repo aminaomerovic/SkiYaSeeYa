@@ -28,20 +28,14 @@
         text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
     
-    .navbar-brand:hover {
-        transform: scale(1.05);
-        transition: transform 0.2s;
-    }
-    
     .nav-link {
-        transition: all 0.3s ease;
+        transition: background-color 0.3s ease;
         border-radius: 5px;
         margin: 0 5px;
     }
     
     .nav-link:hover {
         background-color: rgba(255,255,255,0.1);
-        transform: translateY(-2px);
     }
     
     .btn-link.nav-link {
@@ -54,11 +48,10 @@
     
     .card {
         border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition: box-shadow 0.2s;
     }
     
     .card:hover {
-        transform: translateY(-5px);
         box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
     
@@ -86,7 +79,6 @@
     .btn-primary:hover {
         background-color: var(--secondary-color);
         border-color: var(--secondary-color);
-        transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
     }
     
@@ -99,7 +91,7 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('customer.browse') }}">⛷️ SkiYa-SeeYa</a>
+            <a class="navbar-brand" href="{{ route('welcome') }}">⛷️ SkiYa-SeeYa</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -107,12 +99,15 @@
                 <ul class="navbar-nav ms-auto">
                     @auth
                         @if(Auth::user()->isAdmin())
-                        <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">Kontrolna tabla</a>
-                        </li>
-                         <li class="nav-item">
-                         <a class="nav-link" href="{{ route('admin.announcements') }}">Obaveštenja</a>
-                         </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Kontrolna tabla</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.announcements') }}">Obaveštenja</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.edit-contact') }}">Uredi kontakt</a>
+                            </li>
                         @elseif(Auth::user()->isProvider())
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('provider.dashboard') }}">Moja oprema</a>
@@ -128,11 +123,14 @@
                                 <a class="nav-link" href="{{ route('customer.browse') }}">Pretraga opreme</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('customer.popular') }}">Popularna oprema</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('customer.dashboard') }}">Moje rezervacije</a>
                             </li>
                         @endif
                         <li class="nav-item">
-                        <a class="nav-link" href="{{ route('change-password') }}">Promena lozinke</a>
+                            <a class="nav-link" href="{{ route('change-password') }}">Promena lozinke</a>
                         </li>
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST" class="d-inline">
@@ -149,6 +147,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('customer.browse') }}">Pretraga opreme</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('customer.popular') }}">Popularna oprema</a>
                         </li>
                     @endauth
                 </ul>
@@ -177,13 +178,13 @@
     </main>
 
     <footer class="mt-auto">
-    <div class="container text-center">
-        <p class="mb-1">&copy; 2026 SkiYa-SeeYa - Iznajmljivanje ski opreme</p>
-        <p class="mb-0">
-            <a href="{{ route('contact') }}" class="text-white text-decoration-none">Kontakt</a>
-        </p>
-    </div>
-</footer>
+        <div class="container text-center">
+            <p class="mb-1">&copy; 2026 SkiYa-SeeYa - Iznajmljivanje ski opreme</p>
+            <p class="mb-0">
+                <a href="{{ route('contact') }}" class="text-white text-decoration-none">Kontakt</a>
+            </p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/validation.js') }}"></script>

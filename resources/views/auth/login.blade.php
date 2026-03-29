@@ -19,17 +19,23 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email adresa</label>
-                        <input type="email" class="form-control" id="email" name="email" required 
-       oninvalid="this.setCustomValidity('Unesite ispravnu email adresu')"
-       oninput="this.setCustomValidity('')">
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                               id="email" name="email" value="{{ old('email') }}">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Lozinka</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                               id="password" name="password">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Prijavi se</button>
                 </form>
