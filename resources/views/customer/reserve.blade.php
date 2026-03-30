@@ -12,18 +12,18 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         @if($equipment->image)
-                            <img src="{{ asset('storage/' . $equipment->image) }}" 
+                            <img src="{{ asset('storage/' . $equipment->image) }}"
                                  class="img-fluid rounded" alt="{{ $equipment->name }}">
                         @else
                             <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 150px;">
-                                <span class="text-white fs-1">⛷️</span>
+                                <span class="text-white fw-bold">Nema slike</span>
                             </div>
                         @endif
                     </div>
                     <div class="col-md-8">
                         <h5>{{ $equipment->name }}</h5>
                         <p class="text-muted">{{ $equipment->description }}</p>
-                        <p class="mb-0"><strong>Cena:</strong> <span class="text-primary fs-5">${{ $equipment->price_per_day }}/dan</span></p>
+                        <p class="mb-0"><strong>Cena:</strong> <span class="text-primary fs-5">{{ $equipment->price_per_day }} din/dan</span></p>
                     </div>
                 </div>
 
@@ -39,17 +39,17 @@
 
                 <form method="POST" action="{{ route('customer.store-reservation', $equipment->id) }}">
                     @csrf
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="start_date" class="form-label">Datum početka *</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" 
+                            <input type="date" class="form-control" id="start_date" name="start_date"
                                    min="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label for="end_date" class="form-label">Datum kraja *</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" 
+                            <input type="date" class="form-control" id="end_date" name="end_date"
                                    min="{{ date('Y-m-d') }}" required>
                         </div>
                     </div>

@@ -16,7 +16,7 @@
                          style="height: 200px; object-fit: cover;">
                 @else
                     <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <span class="text-white fs-1">⛷️</span>
+                        <span class="text-white fw-bold">Nema slike</span>
                     </div>
                 @endif
 
@@ -25,14 +25,14 @@
 
                     <p class="mb-1"><strong>Datum početka:</strong> {{ \Carbon\Carbon::parse($reservation->start_date)->format('d.m.Y') }}</p>
                     <p class="mb-1"><strong>Datum kraja:</strong> {{ \Carbon\Carbon::parse($reservation->end_date)->format('d.m.Y') }}</p>
-                    <p class="mb-2"><strong>Ukupna cena:</strong> <span class="text-primary fw-bold">${{ $reservation->total_price }}</span></p>
+                    <p class="mb-2"><strong>Ukupna cena:</strong> <span class="text-primary fw-bold">{{ $reservation->total_price }} din</span></p>
 
                     <p class="mb-3">
                         <strong>Status:</strong>
                         @if($reservation->status == 'confirmed')
-                            <span class="badge bg-success">Potvrđeno</span>
+                            <span class="badge bg-success">Potvrdjeno</span>
                         @elseif($reservation->status == 'completed')
-                            <span class="badge bg-secondary">Završeno</span>
+                            <span class="badge bg-secondary">Zavrseno</span>
                         @elseif($reservation->status == 'rejected')
                             <span class="badge bg-danger">Odbijeno</span>
                         @endif
@@ -43,7 +43,7 @@
                             Ostavi recenziju
                         </a>
                     @elseif($reservation->review)
-                        <span class="text-success">✓ Recenzija ostavljena</span>
+                        <span class="text-success">Recenzija ostavljena</span>
                     @endif
                 </div>
             </div>

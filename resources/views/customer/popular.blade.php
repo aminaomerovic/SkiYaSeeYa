@@ -16,7 +16,7 @@
                          style="height: 180px; object-fit: cover;">
                 @else
                     <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                        <span class="text-white fs-2">⛷️</span>
+                        <span class="text-white fw-bold">Nema slike</span>
                     </div>
                 @endif
                 <div class="card-body p-3 d-flex flex-column">
@@ -48,12 +48,12 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Cena:</span>
-                            <span class="text-primary fw-bold">${{ $item->price_per_day }}/dan</span>
+                            <span class="text-primary fw-bold">{{ $item->price_per_day }} din/dan</span>
                         </div>
                     </div>
                     <div class="mb-2">
                         <span class="badge bg-warning text-dark">
-                            {{ $item->reservations_count }} {{ $item->reservations_count == 1 ? 'rezervacija' : 'rezervacija' }} ovog meseca
+                            {{ $item->reservations_count }} rezervacija ovog meseca
                         </span>
                     </div>
                     @if($item->averageRating())
@@ -80,6 +80,6 @@
 @endif
 
 <div class="mt-4">
-    <a href="{{ route('customer.browse') }}" class="btn btn-secondary">← Nazad na pretragu</a>
+    <a href="{{ route('customer.browse') }}" class="btn btn-secondary">Nazad na pretragu</a>
 </div>
 @endsection

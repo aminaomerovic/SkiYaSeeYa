@@ -6,7 +6,7 @@
 <h2 class="mb-4">Pretraga opreme</h2>
 @if($announcements->count() > 0)
     <div class="alert alert-info">
-        <h5 class="alert-heading">📢 Aktuelnosti</h5>
+        <h5 class="alert-heading">Aktuelnosti</h5>
         @foreach($announcements as $announcement)
             <div class="mb-2">
                 <strong>{{ $announcement->title }}</strong>
@@ -59,12 +59,12 @@
         <div class="col">
             <div class="card h-100 shadow-sm">
                 @if($item->image)
-                    <img src="{{ asset('storage/' . $item->image) }}" 
-                         class="card-img-top" alt="{{ $item->name }}" 
+                    <img src="{{ asset('storage/' . $item->image) }}"
+                         class="card-img-top" alt="{{ $item->name }}"
                          style="height: 180px; object-fit: cover;">
                 @else
                     <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                        <span class="text-white fs-2">⛷️</span>
+                        <span class="text-white fw-bold">Nema slike</span>
                     </div>
                 @endif
                 <div class="card-body p-3 d-flex flex-column">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Cena:</span>
-                            <span class="text-primary fw-bold">${{ $item->price_per_day }}/dan</span>
+                            <span class="text-primary fw-bold">{{ $item->price_per_day }} din/dan</span>
                         </div>
                     </div>
                     @if($item->averageRating())
@@ -108,9 +108,9 @@
                         </div>
                     @endif
                     <div class="mt-auto d-grid gap-2">
-                        <a href="{{ route('customer.equipment-detail', $item->id) }}" 
+                        <a href="{{ route('customer.equipment-detail', $item->id) }}"
                            class="btn btn-sm btn-outline-primary">Detalji</a>
-                        <a href="{{ route('customer.reserve-equipment', $item->id) }}" 
+                        <a href="{{ route('customer.reserve-equipment', $item->id) }}"
                            class="btn btn-sm btn-success">Rezerviši</a>
                     </div>
                 </div>

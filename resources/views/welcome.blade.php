@@ -29,21 +29,18 @@
 <div class="row g-4 mb-5">
     <div class="col-md-4">
         <div class="card h-100 text-center p-4 shadow-sm">
-            <div class="fs-1 mb-3">🎿</div>
             <h5 class="fw-bold">Širok izbor opreme</h5>
             <p class="text-muted">Skije, čizme, jakne, kacige i štapovi — sve na jednom mestu.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card h-100 text-center p-4 shadow-sm">
-            <div class="fs-1 mb-3">📅</div>
             <h5 class="fw-bold">Laka rezervacija</h5>
             <p class="text-muted">Rezerviši opremu za željeni period u samo nekoliko klikova.</p>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card h-100 text-center p-4 shadow-sm">
-            <div class="fs-1 mb-3">⭐</div>
             <h5 class="fw-bold">Ocene i recenzije</h5>
             <p class="text-muted">Čitaj iskustva drugih korisnika i biraj pouzdane pružaoce usluga.</p>
         </div>
@@ -66,12 +63,12 @@
                      style="height: 160px; object-fit: cover;">
             @else
                 <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 160px;">
-                    <span class="text-white fs-2">⛷️</span>
+                    <span class="text-white fw-bold">Nema slike</span>
                 </div>
             @endif
             <div class="card-body p-3 d-flex flex-column">
                 <h6 class="card-title mb-1">{{ $item->name }}</h6>
-                <p class="text-primary fw-bold mb-2">${{ $item->price_per_day }}/dan</p>
+                <p class="text-primary fw-bold mb-2">{{ $item->price_per_day }} din/dan</p>
                 <span class="badge bg-warning text-dark mb-2" style="width: fit-content;">
                     {{ $item->reservations_count }} rezervacija
                 </span>
