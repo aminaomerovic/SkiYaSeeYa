@@ -19,10 +19,13 @@ class CustomerController extends Controller
             ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
                 $query->where('created_at', '>=', $oneMonthAgo);
             }])
-            ->having('reservations_count', '>=', 2)
             ->orderBy('reservations_count', 'desc')
+            ->get()
+            ->filter(function($item) {
+                return $item->reservations_count >= 2;
+            })
             ->take(4)
-            ->get();
+            ->values();
 
         return view('welcome', compact('popularEquipment'));
     }
@@ -66,10 +69,13 @@ class CustomerController extends Controller
             ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
                 $query->where('created_at', '>=', $oneMonthAgo);
             }])
-            ->having('reservations_count', '>=', 2)
             ->orderBy('reservations_count', 'desc')
+            ->get()
+            ->filter(function($item) {
+                return $item->reservations_count >= 2;
+            })
             ->take(10)
-            ->get();
+            ->values();
 
         return view('customer.popular', compact('equipment'));
     }
@@ -114,7 +120,7 @@ class CustomerController extends Controller
 
         if ($overlap) {
             return back()->withErrors([
-                'msg' => 'Ovaj artikal je već rezervisan u izabranom periodu.'
+                'msg' => 'Ovaj artikal je vec rezervisan u izabranom periodu.'
             ]);
         }
 
@@ -131,7 +137,7 @@ class CustomerController extends Controller
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', 'Rezervacija uspešno kreirana.');
+            ->with('success', 'Rezervacija uspesno kreirana.');
     }
 
     public function showReviewForm($reservationId)
@@ -142,7 +148,7 @@ class CustomerController extends Controller
             ->findOrFail($reservationId);
 
         if (Carbon::now()->lt(Carbon::parse($reservation->end_date))) {
-            abort(403, 'Ne možete još ostaviti recenziju. Rezervacija nije završena.');
+            abort(403, 'Ne mozete jos ostaviti recenziju. Rezervacija nije zavrsena.');
         }
 
         return view('customer.review', compact('reservation'));
@@ -161,7 +167,7 @@ class CustomerController extends Controller
             ->findOrFail($reservationId);
 
         if (Carbon::now()->lt(Carbon::parse($reservation->end_date))) {
-            abort(403, 'Ne možete još ostaviti recenziju. Rezervacija nije završena.');
+            abort(403, 'Ne mozete jos ostaviti recenziju. Rezervacija nije zavrsena.');
         }
 
         Review::create([
@@ -173,6 +179,6 @@ class CustomerController extends Controller
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', 'Recenzija uspešno dodata.');
+            ->with('success', 'Recenzija uspesno dodata.');
     }
 }
