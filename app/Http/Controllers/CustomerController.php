@@ -13,22 +13,22 @@ use Carbon\Carbon;
 class CustomerController extends Controller
 {
     public function welcome()
-    {
-        $oneMonthAgo = Carbon::now()->subMonth();
-        $popularEquipment = Equipment::where('available', true)
-            ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
-                $query->where('created_at', '>=', $oneMonthAgo);
-            }])
-            ->orderBy('reservations_count', 'desc')
-            ->get()
-            ->filter(function($item) {
-                return $item->reservations_count >= 2;
-            })
-            ->take(4)
-            ->values();
+{
+    $oneMonthAgo = Carbon::now()->subMonth();
+    $popularEquipment = Equipment::where('available', true)
+        ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
+            $query->where('created_at', '>=', $oneMonthAgo);
+        }])
+        ->orderBy('reservations_count', 'desc')
+        ->get()
+        ->filter(function($item) {
+            return $item->reservations_count >= 1;
+        })
+        ->take(4)
+        ->values();
 
-        return view('welcome', compact('popularEquipment'));
-    }
+    return view('welcome', compact('popularEquipment'));
+}
 
     public function dashboard()
     {
