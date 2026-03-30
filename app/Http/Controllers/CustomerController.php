@@ -62,23 +62,23 @@ class CustomerController extends Controller
     }
 
     public function popularEquipment()
-    {
-        $oneMonthAgo = Carbon::now()->subMonth();
+{
+    $oneMonthAgo = Carbon::now()->subMonth();
 
-        $equipment = Equipment::where('available', true)
-            ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
-                $query->where('created_at', '>=', $oneMonthAgo);
-            }])
-            ->orderBy('reservations_count', 'desc')
-            ->get()
-            ->filter(function($item) {
-                return $item->reservations_count >= 2;
-            })
-            ->take(10)
-            ->values();
+    $equipment = Equipment::where('available', true)
+        ->withCount(['reservations' => function($query) use ($oneMonthAgo) {
+            $query->where('created_at', '>=', $oneMonthAgo);
+        }])
+        ->orderBy('reservations_count', 'desc')
+        ->get()
+        ->filter(function($item) {
+            return $item->reservations_count >= 1;
+        })
+        ->take(10)
+        ->values();
 
-        return view('customer.popular', compact('equipment'));
-    }
+    return view('customer.popular', compact('equipment'));
+}
 
     public function showEquipment($id)
     {
